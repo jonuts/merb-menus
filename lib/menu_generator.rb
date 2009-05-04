@@ -14,11 +14,9 @@ if defined?(Merb::Plugins)
   }
 
   Merb::BootLoader.before_app_loads do
-    puts defined?(Application)
   end
 
   Merb::BootLoader.after_app_loads do
-    Application.class_eval{include MenuGenerator::MainMenuMixin}
   end
 
   Merb::Plugins.add_rakefiles "menu_generator/merbtasks"

@@ -56,9 +56,9 @@ module MenuGenerator
     attr_accessor :default_display_style, :default_url_generator
     attr_reader :name, :submenus
 
-    def submenu(name, &blk)
+    def submenu(name, opts={}, &blk)
       @submenus ||= []
-      submenu = Submenu.new(name, self)
+      submenu = Submenu.new(name, self, opts)
       submenu.instance_eval(&blk)
       @submenus << submenu
       self
