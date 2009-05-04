@@ -1,34 +1,97 @@
 module MenuGenerator
-  class MainMenu
+
+  # This is the top level menu
+  #
+  # ==== Usage
+  # Generate a menu in a controller:
+  #
+  #     create_menu :main_menu do
+  #       # add some display styles
+  #       display_style(:splitncap) {|thing| thing.to_s.split("_").map{|e| e.capitalize}.join(" ")}
+  #       display_style(:dollarify) {|thing| "$#{thing.to_s.gsub(/_/,',')}"}
+  #       default_display_style :splitncap
+  #
+  #       # define all of the submenus with their individual items
+  #       submenu :videos do
+  #         item :home, :url => '/videos'
+  #         
+  #         #this item will be generated with href '/videos/humor' and text 'Humor'
+  #         item :humor
+  #       end
+  #
+  #       submenu :audio do
+  #         display_style :dollarify
+  #         
+  #         item :home, :href => '/audio'
+  #         item :humor, :anchor => "LOL!!!"
+  #       end
+  #     end
+  #         
+  #
+  class Menu
+    extend Enumerable
+
     class << self
-      attr_reader :submenus, :display_rules, :url_generator
+      attr_reader :collection
 
-      def submenu(name, &blk)
-        @submenus ||= []
-        menu = Submenu.new(name)
-        menu.instance_eval(&blk)
-        @submenus << menu
-        self
+      def each
+        @collection.each{|i| yield i}
       end
 
-      # If the menu key is a symbol that looks like this: :this_is_an_ugly_name,
-      # make it look better by adding a rule like this:
-      #   
-      #   display_rule(:split_n_cap){ |thing| thing.to_s.split("_").map{|e| e.capitalize}.join(" ") }
-      #
-      # Then set this as the default rule in MainMenu or Submenu
-      def display_rule(key, &style)
-        @display_rules << DisplayRule.add_rule(key, &style)
-      end
-
-      def default_url_generator(&style)
-        @url_generator = style
+      def [](name)
+        find{|e| e.name == name}
       end
     end
 
-    @display_rules ||= []
+    @collection ||= []
 
-    default_url_generator{ |controller, action| "/#{controller}/#{action}"}
+    def initialize(name)
+      @name = name
+      create_default_rules
+      use_display_style :default
+      use_url_generator :default
+      add_self_to_collection
+    end
+
+    attr_accessor :default_display_style, :default_url_generator
+    attr_reader :name, :submenus
+
+    def submenu(name, &blk)
+      @submenus ||= []
+      submenu = Submenu.new(name, self)
+      submenu.instance_eval(&blk)
+      @submenus << submenu
+      self
+    end
+
+    def display_style(key, &rule)
+      DisplayStyle.add_rule(key, self, &rule)
+    end
+
+    def url_generator(key, &rule)
+      UrlGenerator.add_rule(key, self, &rule)
+    end
+
+    def use_display_style(rule)
+      self.default_display_style = DisplayStyle[rule]
+    end
+
+    def use_url_generator(rule)
+      self.default_url_generator = UrlGenerator[rule]
+    end
+    
+    private
+
+    def add_self_to_collection
+      Menu.collection << self unless Menu[name]
+      self
+    end
+
+    def create_default_rules
+      display_style(:default){|thing| thing.to_s}
+      url_generator(:default){|menu, item| "/#{menu}/#{item}"}
+    end
+
   end
 end
 

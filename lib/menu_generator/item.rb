@@ -12,11 +12,11 @@ module MenuGenerator
     private
 
     def build_url
-      MainMenu.url_generator.call(@submenu.name,@name)
+      submenu.url_generator.rule.call(@submenu.name,@name)
     end
 
     def build_anchor
-      submenu.display_rule.rule.call(@name)
+      submenu.display_style.rule.call(@name)
     end
 
   end

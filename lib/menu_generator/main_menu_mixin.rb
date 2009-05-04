@@ -5,8 +5,8 @@ module MenuGenerator
     end
 
     module ClassMethods
-      def main_menu(&blk)
-        @@menus = MenuGenerator::MainMenu.class_eval(&blk)
+      def main_menu(name, &blk)
+        @@menus = MenuGenerator::Menu.new(name).instance_eval(&blk)
       end
 
       def use_menu(name)

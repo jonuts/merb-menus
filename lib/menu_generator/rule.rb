@@ -5,8 +5,8 @@ module MenuGenerator
     class << self
       attr_reader :collection
 
-      def add_rule(key, &rule)
-        return nil unless block_given? && unique?(key)
+      def add_rule(key, owner, &rule)
+        return nil unless block_given? and unique?(key, owner)
         @collection << new(key, &rule)
       end
 
@@ -14,10 +14,14 @@ module MenuGenerator
         @collection.each{|i| yield i}
       end
 
+      def [](key)
+        find{|rule| rule.key == key}
+      end
+
       private
 
-      def unique?(key)
-        !find{|rule| rule.key == key}
+      def unique?(key, owner)
+        !find{|rule| rule.key == key && rule.owner == owner}
       end
     end
 
@@ -26,10 +30,10 @@ module MenuGenerator
       @rule = rule
     end
 
-    attr_reader :key, :rule
+    attr_reader :key, :rule, :owner
   end
 
   class UrlGenerator < Rule; @collection ||= []; end
-  class DisplayRule  < Rule; @collection ||= []; end
+  class DisplayStyle  < Rule; @collection ||= []; end
 end
 

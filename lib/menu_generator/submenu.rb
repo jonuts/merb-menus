@@ -1,32 +1,38 @@
 module MenuGenerator
   class Submenu
-    class << self
-      attr_accessor :display_rule
 
-      def use_display_rule(name)
-        @display_rule = DisplayRule.find{|rule| rule.key == name}
-      end
+    def initialize(name, menu, opts={})
+      @name          = name
+      @menu          = menu
+      @display_style = @menu.default_display_style
+      @url_generator = @menu.default_url_generator
+      @details       = Item.new(opts.merge({:name => name, :submenu => self}))
+      @items         = []
     end
 
-    def initialize(name)
-      @name = name
-      @items = []
+    attr_reader :name, :items, :menu, :display_style, :url_generator
+
+    def anchor
+      @details.anchor
     end
 
-    attr_reader :name, :items
+    def href
+      @details.href
+    end
 
     def item(name, opts={})
       @items << Item.new(opts.merge({:name => name, :submenu => self}))
       self
     end
 
-    def use_display_rule(name)
-      self.class.use_display_rule(name)
+    def use_display_style(name)
+      @display_style = DisplayStyle[name]
     end
 
-    def display_rule
-      self.class.display_rule
+    def use_url_generator(name)
+      @url_generator = UrlGenerator[name]
     end
+
   end
 end
 

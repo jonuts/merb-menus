@@ -1,5 +1,7 @@
 # make sure we're running inside Merb
 if defined?(Merb::Plugins)
+  $:.push File.dirname(__FILE__)
+
   require 'menu_generator/main_menu_mixin'
   require 'menu_generator/rule'
   require 'menu_generator/menu'
