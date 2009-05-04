@@ -1,4 +1,4 @@
-module MenuGenerator
+module Merb::Menus
 
   # This is the top level menu
   #
@@ -45,15 +45,16 @@ module MenuGenerator
 
     @collection ||= []
 
-    def initialize(name)
+    def initialize(name, is_default=false)
       @name = name
+      @is_default = is_default
       create_default_rules
       use_display_style :default
       use_url_generator :default
       add_self_to_collection
     end
 
-    attr_accessor :default_display_style, :default_url_generator
+    attr_accessor :current_submenu, :default_display_style, :default_url_generator
     attr_reader :name, :submenus
 
     def submenu(name, opts={}, &blk)
@@ -79,7 +80,11 @@ module MenuGenerator
     def use_url_generator(rule)
       self.default_url_generator = UrlGenerator[rule]
     end
-    
+   
+    def default?
+      @is_default
+    end
+
     private
 
     def add_self_to_collection

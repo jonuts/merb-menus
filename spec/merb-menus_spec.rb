@@ -1,8 +1,6 @@
 require File.dirname(__FILE__) + '/spec_helper'
 
-class ParentController < Merb::Controller
-  include MenuGenerator::MainMenuMixin
-
+class Application < Merb::Controller
   create_menu :main do
     submenu :cakes, :href => "/cakes" do
       item :cheese
@@ -19,11 +17,12 @@ class ParentController < Merb::Controller
   end
 end
 
-class CakeController < ParentController
+class Cakes < Application
   use_menu :main, :cakes
 
   # this should be associated with item :cheese
   def cheese
+    'hello'
   end
 
   def chocolate
@@ -35,10 +34,10 @@ class CakeController < ParentController
   end
 end
 
-class BeerController < ParentController
+class BeerController < Application
 end
 
-class SnackController < ParentController
+class SnackController < Application
   use_menu :main, :cakes
 
   def cheese_cake
@@ -48,7 +47,7 @@ end
 
 describe "menu generator" do
   before do
-    @menu = MenuGenerator::Menu[:main]
+    @menu = Merb::Menus[:main]
   end
 
   it "should create the menu" do
@@ -68,8 +67,15 @@ describe "menu generator" do
     @menu.submenus[1].items.map{|e| e.name}.should == [:budweiser, :rolling_rock, :fosters, :fat_tire]
   end
 
-  it "is accessible from child controllers" do
-    ChildController.
+  it "is accessible from child controllers"
 
+  it "sets the current menu properly" do
+    puts request('/cakes/cheese').inspect
+    top = Merb::Menus[:main]
+
+    top.current_submenu.name.should == :cakes
+
+    top.current_submenu.current_item.name.should == :cheese
+  end
 end
 

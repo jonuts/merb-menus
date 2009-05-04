@@ -1,4 +1,4 @@
-module MenuGenerator
+module Merb::Menus
   class Submenu
 
     def initialize(name, menu, opts={})

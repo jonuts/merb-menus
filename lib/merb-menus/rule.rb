@@ -1,4 +1,4 @@
-module MenuGenerator
+module Merb::Menus
   class Rule
     extend Enumerable
 

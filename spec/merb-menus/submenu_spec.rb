@@ -1,9 +1,9 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-describe MenuGenerator::Submenu do
+describe Merb::Menus::Submenu do
   before do
-    MenuGenerator::Menu.new :foo
-    @submenu = MenuGenerator::Submenu.new(:berries, MenuGenerator::Menu[:foo])
+    Merb::Menus::Menu.new :foo
+    @submenu = Merb::Menus::Submenu.new(:berries, Merb::Menus::Menu[:foo])
     @submenu.item(:straw)
     @submenu.item(:rasp)
     @submenu.item(:black, :anchor => "HELLOTHAR", :url => "eek")

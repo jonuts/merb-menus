@@ -1,16 +1,16 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
-describe MenuGenerator::Item do
+describe Merb::Menus::Item do
   before do
-    @menu = MenuGenerator::Menu.new(:foo)
+    @menu = Merb::Menus::Menu.new(:foo)
     @menu.display_style(:split) {|thing| thing.to_s.split("_").join(" ")}
 
-    @submenu = MenuGenerator::Submenu.new(:cakes, @menu)
+    @submenu = Merb::Menus::Submenu.new(:cakes, @menu)
     @submenu.use_display_style(:split)
 
-    @cheesecake = MenuGenerator::Item.new(:name => :cheese_cake, :submenu => @submenu)
-    @spongecake = MenuGenerator::Item.new(:name => :sponge, :submenu => @submenu, :anchor => "sPOnge cAkE")
-    @poundcake = MenuGenerator::Item.new(:name => :pound, :submenu => @submenu, :href => "http://bettercakesite")
+    @cheesecake = Merb::Menus::Item.new(:name => :cheese_cake, :submenu => @submenu)
+    @spongecake = Merb::Menus::Item.new(:name => :sponge, :submenu => @submenu, :anchor => "sPOnge cAkE")
+    @poundcake = Merb::Menus::Item.new(:name => :pound, :submenu => @submenu, :href => "http://bettercakesite")
   end
 
   it "has a unique key"

@@ -1,26 +1,22 @@
-module MenuGenerator
-  module MainMenuMixin
+module Merb
+  module MenuMixin
     def self.included(base)
       base.extend ClassMethods
     end
 
     module ClassMethods
       def create_menu(name, &blk)
-        MenuGenerator::Menu.new(name).instance_eval(&blk)
+        Merb::Menus::Menu.new(name).instance_eval(&blk)
       end
 
-      def use_menu(name)
-        @@current_menu = @@menus.submenus.find{|menu| menu.name == name}
-      end
-
-      def menus
-        @@menus
+      def use_menu(menu, submenu)
+        top = Merb::Menus::Menu[menu] || raise("Menu '#{menu}' does not exist")
+        @@current_menu = top.submenus.find{|menu| menu.name == submenu}
       end
 
       def current_menu
         @@current_menu
       end
-
     end
 
     def menu_item(*args)
