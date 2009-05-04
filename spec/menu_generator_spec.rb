@@ -72,3 +72,23 @@ describe MenuGenerator::MainMenu do
   it "has a default url generation method"
 end
 
+describe MenuGenerator::DisplayRule do
+  before do
+    @split_rule = MenuGenerator::DisplayRule.new(:split){|thing| thing.to_s.split("_").join(" ")}
+    @splitncap = MenuGenerator::DisplayRule.new(:split){|thing| thing.to_s.split("_").join(" ")}
+    @dollarfy = MenuGenerator::DisplayRule.new(:dollar){|thing| "$#{thing.to_s.gsub(/_/,',')}"}
+  end
+
+  it "has a unique key" do
+    @split_rule.key.should == :split
+    @splitncap.key.should == :split
+
+    @split_rule.rule.call("hello_thar").should == "hello thar"
+    @splitncap.rule.call("wut_the_deal").should == "wut the deal"
+  end
+
+  it "has a styling rule" do
+    MenuGenerator::DisplayRule.add_rule(:feh).should be_nil
+  end
+end
+
