@@ -72,11 +72,17 @@ class Merb::Controller
     end
   end
 
-  def current_menu_item
-    if defined?(@@current_menu)
-      action = params[:action]
-      @@current_menu.items.find{|item| item.name.to_s == action}
-    end
+  def current_menu
+    Merb::Menus.current_menu
   end
+
+  def current_submenu
+    Merb::Menus.current_submenu
+  end
+
+  def current_item
+    Merb::Menus.current_item
+  end
+
 end
 

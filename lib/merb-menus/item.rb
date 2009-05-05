@@ -9,6 +9,14 @@ module Merb::Menus
 
     attr_reader :name, :anchor, :href, :submenu
 
+    def inspect
+      "<Merb::Menus::Item> - name~>#{name}"
+    end
+
+    def to_s
+      anchor.to_s
+    end
+
     private
 
     def build_url

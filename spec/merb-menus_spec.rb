@@ -14,6 +14,11 @@ class Application < Merb::Controller
       item :fosters, :anchor => "Foster's"
       item :fat_tire
     end
+
+    submenu :drinks, :href => "/drinks" do
+      item :soda
+    end
+     
   end
 end
 
@@ -22,8 +27,6 @@ class Cakes < Application
 
   # this should be associated with item :cheese
   def cheese
-
-    puts "The current menu is: #{Merb::Menus.current_menu.name}"
     'hello'
   end
 
@@ -56,7 +59,13 @@ class Snack < Application
   end
 end
 
-describe "menu generator" do
+class Drinks < Application
+  def soda
+    "#{current_menu}/#{current_submenu}/#{current_item}"
+  end
+end
+
+describe "menu generator", "Merb::Controller" do
   before do
     @menu = Merb::Menus[:main]
   end
@@ -66,7 +75,7 @@ describe "menu generator" do
   end
 
   it "should create all the submenus" do
-    @menu.submenus.should have(2).things
+    @menu.submenus.should have(3).things
     @menu.submenus.first.name.should == :cakes
   end
 
@@ -99,6 +108,12 @@ describe "menu generator" do
     Merb::Menus.current_menu.name.should == :main
     Merb::Menus.current_menu.current_submenu.name.should == :beers
     Merb::Menus.current_menu.current_submenu.current_item.name.should == :fat_tire
+  end
+
+  it "has helpers to access current menu data" do
+    req = request '/drinks/soda'
+
+    req.body.to_s.should == "main/drinks/soda"
   end
 end
 

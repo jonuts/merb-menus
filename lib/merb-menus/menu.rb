@@ -98,6 +98,10 @@ module Merb::Menus
       "Merb::Menus::Menu - name~>#{self.name} - submenus~>[#{submenus.map{|e| e.name}.join(", ")}]"
     end
 
+    def to_s
+      name.to_s
+    end
+
     private
 
     def add_self_to_collection

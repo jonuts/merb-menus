@@ -36,6 +36,10 @@ module Merb::Menus
     def inspect
       "Merb::Menus::Submenu - name~>#{name} - items~>[#{items.map{|e| e.name}.join(", ")}]"
     end
+
+    def to_s
+      anchor
+    end
   end
 end
 
