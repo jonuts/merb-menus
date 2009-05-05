@@ -1,7 +1,7 @@
 # -*- encoding: utf-8 -*-
 
 GEM_NAME = "merb-menus"
-GEM_VERSION = "0.0.4"
+GEM_VERSION = "0.0.5"
 AUTHOR = ["jonah honeyman"]
 EMAIL = "jonah@honeyman.org"
 HOMEPAGE = "http://github.com/jonuts/merb-menus"
