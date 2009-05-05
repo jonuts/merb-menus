@@ -1,6 +1,8 @@
+# -*- encoding: utf-8 -*-
+
 GEM_NAME = "merb-menus"
-GEM_VERSION = "0.0.3"
-AUTHOR = "jonah honeyman"
+GEM_VERSION = "0.0.4"
+AUTHOR = ["jonah honeyman"]
 EMAIL = "jonah@honeyman.org"
 HOMEPAGE = "http://github.com/jonuts/merb-menus"
 SUMMARY = "Merb plugin that provides dot dot dot"
@@ -10,16 +12,18 @@ Gem::Specification.new do |s|
   s.name = GEM_NAME
   s.version = GEM_VERSION
 
+  s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
+  s.authors = AUTHOR
   s.date = "2009-05-05"
-  s.platform = Gem::Platform::RUBY
-  s.has_rdoc = true
-  s.extra_rdoc_files = ["README", "LICENSE", 'TODO']
-  s.summary = SUMMARY
-  s.description = s.summary
-  s.author = AUTHOR
+  s.description = SUMMARY
   s.email = EMAIL
-  s.homepage = HOMEPAGE
-  #s.add_dependency('merb', '>= 1.0.11')
-  s.require_paths = ['lib']
   s.files = FILES + %w(LICENSE README Rakefile TODO)
+  s.has_rdoc = true
+  s.homepage = HOMEPAGE
+  s.rdoc_options = ["--inline-source", "--charset=UTF-8"]
+  s.require_paths = ['lib', 'lib/merb-menus']
+  s.summary = SUMMARY
+  #s.platform = Gem::Platform::RUBY
+  #s.extra_rdoc_files = ["README", "LICENSE", 'TODO']
+  #s.add_dependency('merb', '>= 1.0.11')
 end
