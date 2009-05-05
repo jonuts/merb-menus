@@ -54,9 +54,9 @@ module Merb::Menus
     @collection ||= []
 
     def initialize(name, is_default=false)
-      @name = name
+      @name       = name
       @is_default = is_default
-      @submenus = []
+      @submenus   = []
       create_default_rules
       use_display_style :default
       use_url_generator :default

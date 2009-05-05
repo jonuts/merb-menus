@@ -30,14 +30,14 @@ class Merb::Controller
   # top<Merb::Menus::Menu>::
   # sub<Symbol>:: name of desired submenu
   def self.get_submenu(top, sub)
-    lambda{|menu, submenu| menu.submenus.find {|m| m.name.to_s == submenu.to_s} }.call(top, sub)
+    top.submenus.find {|m| m.name.to_s == sub.to_s}
   end
 
   # ==== Parameters
   # menu<Merb::Menus::Submenu>::
   # item<Symbol>:: name of desired item
   def self.get_item(menu, item)
-    lambda{|menu, item| menu.items.find{|e| e.name.to_s == item.to_s}}.call(menu, item)
+    menu.items.find{|e| e.name.to_s == item.to_s}
   end
 
   def get_submenu(top, sub)
