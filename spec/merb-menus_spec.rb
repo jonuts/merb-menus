@@ -18,30 +18,38 @@ class Application < Merb::Controller
 end
 
 class Cakes < Application
-  use_menu :main, :cakes
+  use_menu :main
 
   # this should be associated with item :cheese
   def cheese
+
+    puts "The current menu is: #{Merb::Menus.current_menu.name}"
     'hello'
   end
 
   def chocolate
+    menu_item :beers, :budweiser
+
+    'word up'
   end
 
   def not_devils_food
     # associate this action with item :devils_food
     menu_item :devils_food
+
+    ':)'
   end
 end
 
-class BeerController < Application
+class Beer < Application
 end
 
-class SnackController < Application
+class Snack < Application
   use_menu :main, :cakes
 
   def cheese_cake
-    menu_item :main, :cakes, :cheese
+    menu_item :cheese
+    'foo'
   end
 end
 
@@ -70,12 +78,20 @@ describe "menu generator" do
   it "is accessible from child controllers"
 
   it "sets the current menu properly" do
-    puts request('/cakes/cheese').inspect
+    request('/cakes/cheese')
     top = Merb::Menus[:main]
 
     top.current_submenu.name.should == :cakes
 
     top.current_submenu.current_item.name.should == :cheese
   end
+
+  it "overrides actions default menu item" do
+    request('/cakes/chocolate')
+    top = Merb::Menus[:main]
+    top.current_submenu.name.should == :beers
+    top.current_submenu.current_item.name.should == :budweiser
+  end
+
 end
 

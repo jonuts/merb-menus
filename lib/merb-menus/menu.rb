@@ -41,6 +41,14 @@ module Merb::Menus
       def [](name)
         find{|e| e.name == name}
       end
+
+      def first
+        @collection.first
+      end
+
+      def reset
+        each{ |e| e.submenus.each{ |menu| menu.current_item = nil} ; e.current_submenu = nil}
+      end
     end
 
     @collection ||= []

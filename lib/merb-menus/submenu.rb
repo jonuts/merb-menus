@@ -1,6 +1,5 @@
 module Merb::Menus
   class Submenu
-
     def initialize(name, menu, opts={})
       @name          = name
       @menu          = menu
@@ -10,6 +9,7 @@ module Merb::Menus
       @items         = []
     end
 
+    attr_accessor :current_item
     attr_reader :name, :items, :menu, :display_style, :url_generator
 
     def anchor
