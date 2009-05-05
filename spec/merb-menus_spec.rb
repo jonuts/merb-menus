@@ -97,8 +97,8 @@ describe "menu generator" do
   it "finds the correct controller/action combo automagically" do
     request '/beers/fat_tire'
     Merb::Menus.current_menu.name.should == :main
-    Merb::Menus.current_menu.current_submenu.should == :beers
-    Merb::Menus.current_menu.current_submenu.current_item.should == :fat_tire
+    Merb::Menus.current_menu.current_submenu.name.should == :beers
+    Merb::Menus.current_menu.current_submenu.current_item.name.should == :fat_tire
   end
 end
 
