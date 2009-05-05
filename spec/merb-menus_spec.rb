@@ -41,7 +41,10 @@ class Cakes < Application
   end
 end
 
-class Beer < Application
+class Beers < Application
+  def fat_tire
+    'yoink'
+  end
 end
 
 class Snack < Application
@@ -80,9 +83,7 @@ describe "menu generator" do
   it "sets the current menu properly" do
     request('/cakes/cheese')
     top = Merb::Menus[:main]
-
     top.current_submenu.name.should == :cakes
-
     top.current_submenu.current_item.name.should == :cheese
   end
 
@@ -93,5 +94,11 @@ describe "menu generator" do
     top.current_submenu.current_item.name.should == :budweiser
   end
 
+  it "finds the correct controller/action combo automagically" do
+    request '/beers/fat_tire'
+    Merb::Menus.current_menu.name.should == :main
+    Merb::Menus.current_menu.current_submenu.should == :beers
+    Merb::Menus.current_menu.current_submenu.current_item.should == :fat_tire
+  end
 end
 
