@@ -56,6 +56,7 @@ module Merb::Menus
     def initialize(name, is_default=false)
       @name = name
       @is_default = is_default
+      @submenus = []
       create_default_rules
       use_display_style :default
       use_url_generator :default
@@ -91,6 +92,10 @@ module Merb::Menus
    
     def default?
       @is_default
+    end
+
+    def inspect
+      "Merb::Menus::Menu - name~>#{self.name} - submenus~>[#{submenus.map{|e| e.name}.join(", ")}]"
     end
 
     private

@@ -33,6 +33,9 @@ module Merb::Menus
       @url_generator = UrlGenerator[name]
     end
 
+    def inspect
+      "Merb::Menus::Submenu - name~>#{name} - items~>[#{items.map{|e| e.name}.join(", ")}]"
+    end
   end
 end
 
