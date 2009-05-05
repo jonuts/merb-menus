@@ -37,6 +37,14 @@ if defined?(Merb::Plugins)
     def self.reset
       Menu.reset
     end
+
+    def self.current_submenu
+      current_menu.current_submenu rescue nil
+    end
+
+    def self.current_item
+      current_submenu.current_item rescue nil
+    end
   end
 
 end
