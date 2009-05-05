@@ -1,9 +1,10 @@
 GEM_NAME = "merb-menus"
-GEM_VERSION = "0.0.2"
+GEM_VERSION = "0.0.3"
 AUTHOR = "jonah honeyman"
 EMAIL = "jonah@honeyman.org"
 HOMEPAGE = "http://github.com/jonuts/merb-menus"
 SUMMARY = "Merb plugin that provides dot dot dot"
+FILES = Dir.glob("{lib,spec}/**/*")
 
 Gem::Specification.new do |s|
   s.name = GEM_NAME
@@ -19,6 +20,6 @@ Gem::Specification.new do |s|
   s.email = EMAIL
   s.homepage = HOMEPAGE
   #s.add_dependency('merb', '>= 1.0.11')
-  s.require_path = 'lib'
-  s.files = %w(LICENSE README Rakefile TODO) + Dir.glob("{lib,spec}/**/*")
+  s.require_paths = ['lib']
+  s.files = FILES + %w(LICENSE README Rakefile TODO)
 end
