@@ -1,14 +1,12 @@
 # -*- encoding: utf-8 -*-
 
-require File.dirname(__FILE__) + '/lib/merb-menus/version'
-
 GEM_NAME = "merb-menus"
-GEM_VERSION = Merb::Menus::VERSION
+GEM_VERSION = '0.0.6'
 AUTHOR = ["jonah honeyman"]
 EMAIL = "jonah@honeyman.org"
 HOMEPAGE = "http://github.com/jonuts/merb-menus"
-SUMMARY = "Merb plugin that provides dot dot dot"
-FILES = Dir.glob("{lib,spec}/**/*")
+SUMMARY = "Merb plugin that provides dot dot dot uh menus!"
+FILES = %w(.rb /item.rb /menu.rb /merb_controller.rb /merbtasks.rb /rule.rb /submenu.rb /version.rb).map{|e| "lib/merb-menus#{e}"}
 
 Gem::Specification.new do |s|
   s.name = GEM_NAME
@@ -16,7 +14,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = AUTHOR
-  s.date = "2009-05-05"
+  s.date = "2009-05-06"
   s.description = SUMMARY
   s.email = EMAIL
   s.files = FILES + %w(LICENSE README Rakefile TODO)
