@@ -4,15 +4,16 @@ require 'rake/gempackagetask'
 require 'merb-core'
 require 'merb-core/tasks/merb'
 
-GEM_NAME = "menu_generator"
-GEM_VERSION = "0.0.1"
-AUTHOR = "Your Name"
-EMAIL = "Your Email"
-HOMEPAGE = "http://merbivore.com/"
-SUMMARY = "Merb plugin that provides ..."
+require File.dirname(__FILE__) + '/lib/merb-menus/version'
+
+GEM_NAME = "merb-menus"
+GEM_VERSION = Merb::Menus::VERSION
+AUTHOR = "jonah honeyman"
+EMAIL = "jonah@honeyman.org"
+HOMEPAGE = "http://github.com/jonuts/merb-menus"
+SUMMARY = "Merb plugin that provides dot dot dot uh menus" 
 
 spec = Gem::Specification.new do |s|
-  s.rubyforge_project = 'merb'
   s.name = GEM_NAME
   s.version = GEM_VERSION
   s.platform = Gem::Platform::RUBY

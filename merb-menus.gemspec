@@ -1,7 +1,9 @@
 # -*- encoding: utf-8 -*-
 
+require File.dirname(__FILE__) + '/lib/merb-menus/version'
+
 GEM_NAME = "merb-menus"
-GEM_VERSION = "0.0.5"
+GEM_VERSION = Merb::Menus::VERSION
 AUTHOR = ["jonah honeyman"]
 EMAIL = "jonah@honeyman.org"
 HOMEPAGE = "http://github.com/jonuts/merb-menus"

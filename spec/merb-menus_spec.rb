@@ -55,7 +55,12 @@ class Snack < Application
 
   def cheese_cake
     menu_item :cheese
-    'foo'
+    
+    [current_menu, current_submenu, current_item].join(" ")
+  end
+
+  def pistachios
+    [current_menu, current_submenu, current_item].join(" ")
   end
 end
 
@@ -115,5 +120,17 @@ describe "menu generator", "Merb::Controller" do
 
     req.body.to_s.should == "main/drinks/soda"
   end
+
+  it do
+    req = request '/snack/cheese_cake'
+    req.body.to_s.should == "main cakes cheese"
+  end
+
+  it "resets all current menus before each request" do
+    req = request '/snack/pistachios'
+    req.body.to_s.should_not == "main cakes cheese" #this would happen w/o the reset
+    req.body.to_s.should == "main cakes "
+  end
+   
 end
 

@@ -1,5 +1,7 @@
 class Merb::Controller
   before do
+    Merb::Menus.reset
+
     controller = params[:controller]
     action = params[:action]
 
@@ -8,22 +10,32 @@ class Merb::Controller
         menu.current_item = get_item(menu,action)
       end
     end
+
+    callback = self.class.instance_variable_get(:@callback)
+    callback.call if callback
   end
 
   def self.create_menu(name, &blk)
     Merb::Menus::Menu.new(name).instance_eval(&blk)
   end
 
-  def self.use_menu(*args)
-    menu, submenu = *args
-    top = Merb::Menus[menu]
-    Merb::Menus.current_menu = top
-    raise NoMenuError.new("Menu '#{menu}' does not exist") unless top
+  def self.set_current
+  end
 
-    if submenu
-      top.current_submenu = get_submenu(top, submenu)
-      raise NoMenuError.new("Menu '#{submenu}' does not exist") unless top.current_submenu
-    end
+  # FIXME: if only one arg is given, we probably want to set submenu only? maybe? grr
+  def self.use_menu(*args)
+    @callback = lambda{
+      menu, submenu = *args
+      top = Merb::Menus[menu]
+      Merb::Menus.current_menu = top
+      raise Merb::Menus::NoMenuError.new("Menu '#{menu}' does not exist") unless top
+
+      if submenu
+        top.current_submenu = get_submenu(top, submenu)
+        raise Merb::Menus::NoMenuError.new("Menu '#{submenu}' does not exist") unless top.current_submenu
+      end
+    }
+    @callback.call
   end
 
   # ==== Parameters

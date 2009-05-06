@@ -67,7 +67,6 @@ module Merb::Menus
     attr_reader :name, :submenus
 
     def submenu(name, opts={}, &blk)
-      @submenus ||= []
       submenu = Submenu.new(name, self, opts)
       submenu.instance_eval(&blk)
       @submenus << submenu
