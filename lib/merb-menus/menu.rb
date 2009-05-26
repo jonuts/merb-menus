@@ -68,7 +68,7 @@ module Merb::Menus
 
     def submenu(name, opts={}, &blk)
       submenu = Submenu.new(name, self, opts)
-      submenu.instance_eval(&blk)
+      submenu.instance_eval(&blk) if block_given?
       @submenus << submenu
       self
     end

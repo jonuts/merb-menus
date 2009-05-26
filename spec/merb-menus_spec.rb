@@ -131,6 +131,7 @@ describe "menu generator", "Merb::Controller" do
     req.body.to_s.should_not == "main cakes cheese" #this would happen w/o the reset
     req.body.to_s.should == "main cakes "
   end
+
    
 end
 
