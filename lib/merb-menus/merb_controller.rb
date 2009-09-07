@@ -2,8 +2,8 @@ class Merb::Controller
   before do
     Merb::Menus.reset
 
-    controller = params[:controller]
-    action = params[:action]
+    controller = params['controller']
+    action = params['action']
 
     if top = Merb::Menus.current_menu = Merb::Menus.default
       if menu = top.current_submenu = get_submenu(top,controller)
