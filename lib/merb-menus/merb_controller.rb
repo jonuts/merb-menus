@@ -2,6 +2,8 @@ class Merb::Controller
   before do
     Merb::Menus.reset
 
+    self.class.instance_variable_set(:@callback, nil)
+
     controller = params['controller']
     action = params['action']
 
