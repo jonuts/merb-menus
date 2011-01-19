@@ -22,7 +22,7 @@ if defined?(Merb::Plugins)
   Merb::Plugins.add_rakefiles "merb-menus/merbtasks"
 
   module Merb::Menus
-    class << self; attr_accessor :current_menu; end
+    class << self; attr_accessor :current_menu, :controller end
 
     class NoMenuError < StandardError;end
 
@@ -34,8 +34,8 @@ if defined?(Merb::Plugins)
       Menu.find{|menu| menu.default?} || Menu.first
     end
 
-    def self.reset
-      Menu.reset
+    def self.reset!
+      Menu.reset!
     end
 
     def self.current_submenu

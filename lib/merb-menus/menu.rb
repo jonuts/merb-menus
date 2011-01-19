@@ -46,8 +46,15 @@ module Merb::Menus
         @collection.first
       end
 
-      def reset
-        each{ |e| e.submenus.each{ |menu| menu.current_item = nil} ; e.current_submenu = nil}
+      def reset!
+        each do |e|
+          e.submenus.each do |menu|
+            menu.current_item = nil
+            menu.items.clear
+          end
+
+          e.current_submenu = nil
+        end
       end
     end
 
@@ -66,9 +73,8 @@ module Merb::Menus
     attr_accessor :current_submenu, :default_display_style, :default_url_generator
     attr_reader :name, :submenus
 
-    def submenu(name, opts={}, &blk)
-      submenu = Submenu.new(name, self, opts)
-      submenu.instance_eval(&blk) if block_given?
+    def submenu(name, opts={}, &data)
+      submenu = Submenu.new(name, self, opts, &data)
       @submenus << submenu
       self
     end
