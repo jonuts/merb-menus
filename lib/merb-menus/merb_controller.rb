@@ -1,33 +1,16 @@
 class Merb::Controller
   before do; Merb::Menus.reset! end
-  before :generate_default_menu
 
-  class << self
-    def create_menu(name, &data)
-      Merb::Menus::Menu.new(name).instance_eval &data
-    end
-
-    # ==== Parameters
-    # top<Merb::Menus::Menu>::
-    # sub<Symbol>:: name of desired submenu
-    def get_submenu(top, sub)
-      top.submenus.find {|m| m.name.to_s == sub.to_s}
-    end
-
-    # ==== Parameters
-    # menu<Merb::Menus::Submenu>::
-    # item<Symbol>:: name of desired item
-    def get_item(menu, item)
-      item = menu.items.find{|e| e.name.to_s == item.to_s}
-    end
+  def self.create_menu(name, &data)
+    Merb::Menus::Menu.new(name).instance_eval &data
   end
 
   def get_submenu(top, sub)
-    self.class.get_submenu(top, sub)
+    top.submenus.find {|m| m.name.to_s == sub.to_s}
   end
 
-  def get_item(menu, item)
-    self.class.get_item(menu, item)
+  def get_item(submenu, item)
+    submenu.items.find {|e| e.name.to_s == item.to_s}
   end
 
   def menu_item(*args)
@@ -71,11 +54,27 @@ class Merb::Controller
       instance_eval &m.data
       m.generated!
     end
+
+    @__menu_generated__ = true
+  end
+
+  def menu_generated?
+    !!@__menu_generated__
   end
 
   private
 
+  def no_menu!
+    @__no_menu__ = true
+  end
+
+  def no_menu?
+    !!@__no_menu__
+  end
+
   def generate_default_menu
+    return if no_menu? || menu_generated?
+
     if top = Merb::Menus.current_menu = Merb::Menus.default
       generate_menu(top)
 
