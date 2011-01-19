@@ -43,6 +43,14 @@ module Merb::Menus
       anchor
     end
 
+    def generated!
+      @generated = true
+    end
+
+    def generated?
+      !!@generated
+    end
+
     private
 
     # Don't generate the URLs until the action is hit

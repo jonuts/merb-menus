@@ -1,50 +1,10 @@
 class Merb::Controller
-  before do
-    Merb::Menus.reset!
-
-    if top = Merb::Menus.current_menu = Merb::Menus.default
-      generate_menu(top)
-
-      if menu = top.current_submenu = get_submenu(top, controller_name)
-        menu.current_item = get_item(menu, action_name)
-      end
-    end
-
-    callback = self.class.instance_variable_get(:@menu_callback)
-    instance_eval &callback if callback
-  end
-
-  def item(*args)
-    @__submenu_generation__.item(*args)
-  end
-
-  def generate_menu(menu)
-    menu.submenus.each do |m|
-      @__submenu_generation__ = m
-      instance_eval &m.data
-    end
-  end
+  before do; Merb::Menus.reset! end
+  before :generate_default_menu
 
   class << self
     def create_menu(name, &data)
       Merb::Menus::Menu.new(name).instance_eval &data
-    end
-
-    # FIXME: if only one arg is given, we probably want to set submenu only? maybe? grr
-    def use_menu(*args)
-      @menu_callback = lambda do
-        menu, submenu = *args
-        top = Merb::Menus[menu]
-        Merb::Menus.current_menu = top
-        raise Merb::Menus::NoMenuError.new("Menu '#{menu}' does not exist") unless top
-
-        if submenu
-          top.current_submenu = get_submenu(top, submenu)
-          raise Merb::Menus::NoMenuError, "Submenu '#{submenu}' does not exist" unless top.current_submenu
-        end
-      end
-
-      @menu_callback.call
     end
 
     # ==== Parameters
@@ -71,29 +31,20 @@ class Merb::Controller
   end
 
   def menu_item(*args)
-    case args.size
-    when 3
-      menu, submenu, item = *args
-      self.class.use_menu(menu, submenu)
-      top = Merb::Menus[menu]
-      menu = get_submenu(top,submenu)
-      menu.current_item = get_item(menu,item)
-    when 2
-      submenu, item = *args
-      top = Merb::Menus.default
-      self.class.use_menu(top.name,submenu)
-      menu = get_submenu(top,submenu)
-      menu.current_item = get_item(menu,item)
-    when 1
-      item = *args
-      top = Merb::Menus.default
-      menu = top.current_submenu
-      menu.current_item = get_item(menu,item)
-    else
-      raise ArgumentError.new("Wrong number of arguments given (#{args.size} for 1)")
+    menu, submenu, item = *args
+
+    if item.nil?
+      item = submenu
+      submenu = menu
+      menu = Merb::Menus.default.name
     end
 
+    top = Merb::Menus[menu]
+    Merb::Menus.current_menu = top
     generate_menu(top)
+    submenu = get_submenu(top, submenu)
+    top.current_submenu = submenu
+    submenu.current_item = get_item(submenu, item)
   end
 
   def current_menu
@@ -108,5 +59,30 @@ class Merb::Controller
     Merb::Menus.current_item
   end
 
+  # Generate items in the context of our current controller instance
+  # so that we can generate urls with merb's url helpers
+  def item(*args)
+    @__submenu_generation__.item(*args)
+  end
+
+  def generate_menu(menu)
+    menu.submenus.each do |m|
+      @__submenu_generation__ = m
+      instance_eval &m.data
+      m.generated!
+    end
+  end
+
+  private
+
+  def generate_default_menu
+    if top = Merb::Menus.current_menu = Merb::Menus.default
+      generate_menu(top)
+
+      if menu = top.current_submenu = get_submenu(top, controller_name)
+        menu.current_item = get_item(menu, action_name)
+      end
+    end
+  end
 end
 
