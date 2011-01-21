@@ -5,30 +5,7 @@ class Merb::Controller
     Merb::Menus::Menu.new(name).instance_eval &data
   end
 
-  def get_submenu(top, sub)
-    top.submenus.find {|m| m.name.to_s == sub.to_s}
-  end
-
-  def get_item(submenu, item)
-    submenu.items.find {|e| e.name.to_s == item.to_s}
-  end
-
-  def menu_item(*args)
-    menu, submenu, item = *args
-
-    if item.nil?
-      item = submenu
-      submenu = menu
-      menu = Merb::Menus.default.name
-    end
-
-    top = Merb::Menus[menu]
-    Merb::Menus.current_menu = top
-    generate_menu(top)
-    submenu = get_submenu(top, submenu)
-    top.current_submenu = submenu
-    submenu.current_item = get_item(submenu, item)
-  end
+  private
 
   def current_menu
     Merb::Menus.current_menu
@@ -48,6 +25,14 @@ class Merb::Controller
     @__submenu_generation__.item(*args)
   end
 
+  def get_submenu(top, sub)
+    top.submenus.find {|m| m.name.to_s == sub.to_s}
+  end
+
+  def get_item(submenu, item)
+    submenu.items.find {|e| e.name.to_s == item.to_s}
+  end
+
   def generate_menu(menu)
     menu.submenus.each do |m|
       @__submenu_generation__ = m
@@ -55,14 +40,16 @@ class Merb::Controller
       m.generated!
     end
 
+    menu_generated!
+  end
+  
+  def menu_generated!
     @__menu_generated__ = true
   end
 
   def menu_generated?
     !!@__menu_generated__
   end
-
-  private
 
   def no_menu!
     @__no_menu__ = true
@@ -72,16 +59,35 @@ class Merb::Controller
     !!@__no_menu__
   end
 
+  def _menu_setup(menu, sub, item)
+    raise ArgumentError, "#{menu} is not a Merb::Menu" unless Merb::Menus::Menu === menu
+
+    top = Merb::Menus.current_menu = menu
+    generate_menu(menu)
+    if submenu = top.current_submenu = get_submenu(top, sub)
+      submenu.current_item = get_item(submenu, item)
+    end
+  end
+
+  def menu_item(*args)
+    menu, submenu, item = *args
+
+    if item.nil?
+      item    = submenu
+      submenu = menu
+      menu    = Merb::Menus.default.name
+    end
+
+    top = Merb::Menus[menu]
+    raise Merb::Menus::NoMenuError, "Menu #{menu} does not exist" unless top
+
+    _menu_setup(top, submenu, item)
+  end
+
   def generate_default_menu
     return if no_menu? || menu_generated?
 
-    if top = Merb::Menus.current_menu = Merb::Menus.default
-      generate_menu(top)
-
-      if menu = top.current_submenu = get_submenu(top, controller_name)
-        menu.current_item = get_item(menu, action_name)
-      end
-    end
+    _menu_setup(Merb::Menus.default, controller_name, action_name)
   end
 end
 
