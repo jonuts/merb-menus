@@ -1,13 +1,14 @@
 module Merb::Menus
   class Item
     def initialize(opts, &data)
-      @submenu = opts[:submenu]
-      @name = opts[:name]
-      @anchor = opts[:anchor] || build_anchor
-      @href = opts[:href] || build_url
+      @submenu    = opts.delete(:submenu)
+      @name       = opts.delete(:name)
+      @anchor     = opts.delete(:anchor) || build_anchor
+      @href       = opts.delete(:href) || build_url
+      @extra_opts = opts
     end
 
-    attr_reader :name, :anchor, :submenu, :data
+    attr_reader :name, :anchor, :submenu, :data, :extra_opts
 
     def inspect
       "<Merb::Menus::Item> - name~>#{name}"
@@ -34,7 +35,6 @@ module Merb::Menus
     def build_anchor
       submenu.display_style.rule.call(@name)
     end
-
   end
 end
 
